@@ -1,0 +1,5 @@
+praw.ini
+*.csv
+*.pyc
+config.py
+.vscode/settings.json

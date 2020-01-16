@@ -31,8 +31,6 @@ def load_data(subreddits, number_of_submissions, refresh_data, submission_datafi
     submissions_list = []
     comments_list = []
     submission_number = 0
-    submissions = pd.DataFrame()
-    comments = pd.DataFrame()
     total_number_of_submissions = number_of_submissions * len(subreddits)
 
     if refresh_data == True:
@@ -54,25 +52,23 @@ def load_data(subreddits, number_of_submissions, refresh_data, submission_datafi
                     submission.id,
                     subreddit,
                     ])
-            subreddit_submissions = pd.DataFrame(submissions_list, columns=['title','score',
+            submissions = pd.DataFrame(submissions_list, columns=['title','score',
                 'comments','selftext','createddate', 'link_id', 'subreddit'])
-            submissions = pd.concat([submissions,subreddit_submissions])
         #extract the comments
-            for index, row in submissions.iterrows():
-                submission_number += 1
-                progressbar(submission_number, total_number_of_submissions)
-                link_id_str = str(row['link_id'])
-                submission_child = reddit.submission(id=link_id_str)
-                submission_child.comments.replace_more(limit=None)
-                for comment in submission_child.comments.list():
-                    comments_list.append([
-                        comment.body,
-                        comment.score,
-                        comment.created,
-                        subreddit,
-                        ])
-            subreddit_comments = pd.DataFrame(comments_list, columns=['text','score','createddate','subreddit'])
-            comments = pd.concat([comments,subreddit_comments])
+        for row in submissions.itertuples():
+            submission_number += 1
+            progressbar(submission_number, total_number_of_submissions)
+            link_id_str = str(row.link_id)
+            submission_child = reddit.submission(id=link_id_str)
+            submission_child.comments.replace_more(limit=None)
+            for comment in submission_child.comments.list():
+                comments_list.append([
+                    comment.body,
+                    comment.score,
+                    comment.created,
+                    row.subreddit,
+                    ])
+        comments = pd.DataFrame(comments_list, columns=['text','score','createddate','subreddit'])
         #Save to file
         submissions.to_csv(submission_datafile)
         comments.to_csv(comments_datafile)

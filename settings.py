@@ -3,7 +3,7 @@
 #SUBMISSION_DATAFILE = "submission_data.csv"
 #COMMENTS_DATAFILE = "comments_data.csv"
 NUMBER_OF_SUBMISSIONS = 10
-SUBREDDIT = 'Singapore'
+SUBREDDIT = {'Singapore', 'Malaysia'}
 
 #Keyword terms to be looked for
 TERMS = [

@@ -1,7 +1,7 @@
 
 #Subreddit scraping settings
-SUBMISSION_DATAFILE = "submission_data.csv"
-COMMENTS_DATAFILE = "comments_data.csv"
+#SUBMISSION_DATAFILE = "submission_data.csv"
+#COMMENTS_DATAFILE = "comments_data.csv"
 NUMBER_OF_SUBMISSIONS = 10
 SUBREDDIT = 'Singapore'
 
@@ -10,4 +10,5 @@ TERMS = [
     'Sustainability',
     'Climate',
     'Global Warming',
+    'Carbon',
 ]

@@ -31,9 +31,10 @@ if REFRESH_DATA == True:
                         submission.selftext, 
                         submission.created,
                         submission.id,
+                        settings.SUBREDDIT,
                         ])
         submissions = pd.DataFrame(submissions_list, columns=['title','score',
-        'comments','selftext','createddate', 'link_id'])
+        'comments','selftext','createddate', 'link_id', 'subreddit'])
         #extract the comments
         for index, row in submissions.iterrows():
                 progressbar(index, settings.NUMBER_OF_SUBMISSIONS)
@@ -45,8 +46,9 @@ if REFRESH_DATA == True:
                                 comment.body,
                                 comment.score,
                                 comment.created,
+                                settings.SUBREDDIT,
                         ])
-        comments = pd.DataFrame(comments_list, columns=['text','score','createddate'])
+        comments = pd.DataFrame(comments_list, columns=['text','score','createddate','subreddit'])
         #Save to file
         submissions.to_csv(settings.SUBMISSION_DATAFILE)
         comments.to_csv(settings.COMMENTS_DATAFILE)

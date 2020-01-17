@@ -1,6 +1,5 @@
 import praw
 import pandas as pd
-import os
 import settings
 import tools
 
@@ -9,8 +8,10 @@ REFRESH_DATA = True
 
 # Load or generate data
 
-submissions , comments = tools.load_data(settings.SUBREDDIT, 
-        settings.NUMBER_OF_SUBMISSIONS, REFRESH_DATA)
+data = tools.load_data(
+        settings.SUBREDDIT, settings.NUMBER_OF_SUBMISSIONS, REFRESH_DATA)
+submissions = data[0]
+comments = data[1]
 
 #Make a count of the terms
 

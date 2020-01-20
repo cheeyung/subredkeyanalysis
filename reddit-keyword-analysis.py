@@ -8,13 +8,10 @@ REFRESH_DATA = True
 
 # Load or generate data
 
-data = tools.load_data(
+submissions, comments = tools.load_data(
         settings.SUBREDDIT, settings.NUMBER_OF_SUBMISSIONS, REFRESH_DATA)
-submissions = data[0]
-comments = data[1]
 
 #Make a count of the terms
-
 for term in settings.TERMS:
         #Submissions
         sub_term_check = submissions.title.str.contains(f'{term}',case=False)
@@ -23,14 +20,13 @@ for term in settings.TERMS:
         com_term_check = comments.text.str.contains(f'{term}',case=False)
         comments[f'Contains{term}'] = com_term_check
 
-print(submissions)
-print(comments)
+#Include a column for any term
+comments['ContainsAny']= (comments.filter(regex="Contains",axis=1).any(axis=1))
 
-count = {'submissions':{}, 'comments':{}}
-com_count = {}
-
-for term in settings.TERMS:
-        count['submissions'][f'{term}'] = submissions[f'Contains{term}'].sum()
-        count['comments'][f'{term}'] = comments[f'Contains{term}'].sum()
-
-print(count)
+# Create new dataframe with % of comments containing terms
+a = comments.groupby(['subreddit']).size().to_frame('number_of_comments').reset_index()
+b = comments.loc[comments.ContainsAny]
+b = b.groupby(['subreddit']).size().to_frame('number_of_comments_with_terms').reset_index()
+result = pd.merge(a,b, on="subreddit", how='outer')
+result['percentage'] = result['number_of_comments_with_terms'] / result['number_of_comments']
+print(result)

@@ -81,15 +81,20 @@ def load_data(subreddits, number_of_submissions, refresh_data, get_comments=True
                         ])
             comments = pd.DataFrame(comments_list, columns=['text','score','createddate','subreddit'])
         #Save to file
-        comments.to_csv(comments_datafile)
-        
-    else:
-        submissions = pd.read_csv(submission_datafile,index_col=0)
-        if get_comments == True:
-            comments = pd.read_csv(comments_datafile,index_col=0)
+            comments.to_csv(comments_datafile)
+        else:
+            comments = ['']
 
-    if get_comments == True:
-        return_file = [submissions, comments]
+    #Load data from existing CSVs if REFRESH_DATA = False
     else:
-        return_file = [submissions]
-    return return_file
+        try:
+            submissions = pd.read_csv(submission_datafile,index_col=0)
+            if get_comments == True:
+                comments = pd.read_csv(comments_datafile,index_col=0)
+            else:
+                comments = ['']
+        except:
+            print('No data to load - set REFRESH_DATA to True')
+            exit()
+
+    return submissions, comments

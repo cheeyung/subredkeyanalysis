@@ -107,20 +107,20 @@ def term_check(submissions_df, comments_df, terms):
     Returns the original dataframe with appended columns with True/False for each term. 
     Also appends a column that is True if any of the terms is present
     '''
-        #Make a count of the terms
-        for term in terms:
-                #Submissions
-                sub_term_check = submissions_df.title.str.contains(f'{term}',case=False)
-                submissions_df[f'Contains{term}'] = sub_term_check
-                #Comments
-                com_term_check = comments_df.text.str.contains(f'{term}',case=False)
-                comments_df[f'Contains{term}'] = com_term_check
+    #Make a count of the terms
+    for term in terms:
+            #Submissions
+            sub_term_check = submissions_df.title.str.contains(f'{term}',case=False)
+            submissions_df[f'Contains{term}'] = sub_term_check
+            #Comments
+            com_term_check = comments_df.text.str.contains(f'{term}',case=False)
+            comments_df[f'Contains{term}'] = com_term_check
 
-        #Include a column for any term
-        for df in [submissions_df, comments_df]:
-            df['ContainsAny']= (df.filter(regex="Contains",axis=1).any(axis=1))
+    #Include a column for any term
+    for df in [submissions_df, comments_df]:
+        df['ContainsAny']= (df.filter(regex="Contains",axis=1).any(axis=1))
 
-        return submissions_df, comments_df
+    return submissions_df, comments_df
 
 def term_analysis(df, scope):
     '''
@@ -129,19 +129,19 @@ def term_analysis(df, scope):
     Work in progress
     '''
 
-        # Create new dataframe with % of comments containing terms
-        a = df.groupby(['subreddit']).size().to_frame(f'number_of_{scope}').reset_index()
-        b = df.loc[df.ContainsAny]
-        b = b.groupby(['subreddit']).size().to_frame(f'number_of_{scope}_with_terms').reset_index()
-        result = pd.merge(a,b, on="subreddit", how='outer')
-        result['percentage'] = result[f'number_of_{scope}_with_terms'] / result[f'number_of_{scope}']
+    # Create new dataframe with % of comments containing terms
+    a = df.groupby(['subreddit']).size().to_frame(f'number_of_{scope}').reset_index()
+    b = df.loc[df.ContainsAny]
+    b = b.groupby(['subreddit']).size().to_frame(f'number_of_{scope}_with_terms').reset_index()
+    result = pd.merge(a,b, on="subreddit", how='outer')
+    result['percentage'] = result[f'number_of_{scope}_with_terms'] / result[f'number_of_{scope}']
 
-        #Get mean scores
-        c = df.groupby(['subreddit']).score.mean().to_frame(f'mean score of all {scope}').reset_index() 
-        d = df.loc[df.ContainsAny].groupby(['subreddit']).score.mean().to_frame(f'mean score of all {scope} with terms').reset_index()
-        e = df.loc[df.ContainsAny==False].groupby(['subreddit']).score.mean().to_frame(f'mean score of all other {scope}').reset_index()
+    #Get mean scores
+    c = df.groupby(['subreddit']).score.mean().to_frame(f'mean score of all {scope}').reset_index() 
+    d = df.loc[df.ContainsAny].groupby(['subreddit']).score.mean().to_frame(f'mean score of all {scope} with terms').reset_index()
+    e = df.loc[df.ContainsAny==False].groupby(['subreddit']).score.mean().to_frame(f'mean score of all other {scope}').reset_index()
 
-        for i in [c,d,e]: #merge into results dataframe
-                result = pd.merge(result, i, on="subreddit", how="outer")
+    for i in [c,d,e]: #merge into results dataframe
+            result = pd.merge(result, i, on="subreddit", how="outer")
 
-        return result
+    return result

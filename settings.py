@@ -2,7 +2,7 @@
 #Subreddit scraping settings
 #SUBMISSION_DATAFILE = "submission_data.csv"
 #COMMENTS_DATAFILE = "comments_data.csv"
-NUMBER_OF_SUBMISSIONS = 10
+NUMBER_OF_SUBMISSIONS = 1000
 
 SEA = [
     'Singapore',
@@ -157,7 +157,7 @@ REST_OF_ASIA = [
 ]
 
 #Subreddits to be scraped
-SUBREDDIT = SEA
+SUBREDDIT = SEA + USA + EUROPE +REST_OF_ASIA
 
 #Keyword terms to be looked for
 TERMS = [
@@ -170,5 +170,12 @@ TERMS = [
     'Recycables',
     'Energy Efficient',
     'Electric Car',
+    'Greenhouse Gas',
+    'Greenhouse Gases',
+    'Emissions',
+    'Fossil Fuels',
+    'UNFCCC',
+    'IPCC',
+    'Mitigation',
 ]
 

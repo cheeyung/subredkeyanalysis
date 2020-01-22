@@ -23,6 +23,9 @@ comments_analysis.to_csv('comments_analysis.csv')
 
 # Begin plotting
 df = comments_analysis
+df_false = df.loc[df.percentage.isna()]
+df_false.to_csv('No terms.csv')
+df = df.dropna()
 
 g = sns.scatterplot(x='percentage', y='score_positivity', hue='subreddit', data=df)
 
@@ -30,12 +33,12 @@ g = sns.scatterplot(x='percentage', y='score_positivity', hue='subreddit', data=
 x_min_threshold = 0
 x_max_threshold = df['percentage'].mean() + 3* df['percentage'].std()
 y_min_threshold = df['score_positivity'].mean() - 1 * df['score_positivity'].std()
-y_max_threshold = df['score_positivity'].mean() + 1 * df['score_positivity'].std()
+y_max_threshold = df['score_positivity'].mean() + 2 * df['score_positivity'].std()
 
 g.set(
       xlim=(x_min_threshold, x_max_threshold),
       ylim=(y_min_threshold, y_max_threshold),
-      xlabel= f'% of comments with terms in it',
+      xlabel= f'% of comments with sustainability terms in it',
       ylabel = f'Score positivity',
 )
 

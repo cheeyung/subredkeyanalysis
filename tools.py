@@ -134,7 +134,7 @@ def term_analysis(df, scope):
     b = df.loc[df.ContainsAny]
     b = b.groupby(['subreddit']).size().to_frame(f'number_of_{scope}_with_terms').reset_index()
     result = pd.merge(a,b, on="subreddit", how='outer')
-    result['percentage'] = result[f'number_of_{scope}_with_terms'] / result[f'number_of_{scope}']
+    result['percentage'] = result[f'number_of_{scope}_with_terms'] / result[f'number_of_{scope}'] * 100
 
     #Get mean scores
     c = df.groupby(['subreddit']).score.mean().to_frame(f'mean score of all {scope}').reset_index() 
@@ -142,6 +142,8 @@ def term_analysis(df, scope):
     e = df.loc[df.ContainsAny==False].groupby(['subreddit']).score.mean().to_frame(f'mean score of all other {scope}').reset_index()
 
     for i in [c,d,e]: #merge into results dataframe
-            result = pd.merge(result, i, on="subreddit", how="outer")
+        result = pd.merge(result, i, on="subreddit", how="outer")
+    
+    result["score_positivity"] = result[f'mean score of all {scope} with terms'] / result[f'mean score of all other {scope}']
 
     return result

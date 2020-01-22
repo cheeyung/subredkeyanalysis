@@ -4,3 +4,5 @@ praw.ini
 config.py
 .vscode/settings.json
 TODO
+images/
+reddit-keyword-analysis-backup.py
